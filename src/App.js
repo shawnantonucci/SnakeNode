@@ -32,7 +32,6 @@ const App = () => {
         <>
           {gameOver && <div>{message}... Game Over</div>}
           <div>Arrow keys to move around</div>
-          <div>Score: {score}</div>
         </>
       ) : (
         <AuthenicatedScreen />

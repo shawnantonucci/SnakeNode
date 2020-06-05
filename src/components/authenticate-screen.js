@@ -9,9 +9,9 @@ const AuthenticateScreen = () => {
   return (
     <>
       <button onClick={() => setAuthChoice(!authChoice)}>
-        {authChoice ? "Switch to Register" : "Switch to Login"}
+        {authChoice ? "Switch to Login" : "Switch to Register"}
       </button>
-      {authChoice ? <Login /> : <Register />}
+      {authChoice ? <Register /> : <Login />}
     </>
   );
 };

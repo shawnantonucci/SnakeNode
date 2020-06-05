@@ -24,6 +24,7 @@ const GameScreen = () => {
     speed,
     moveSnake,
     startGame,
+    score
   } = Game();
 
   const signOut = () => {
@@ -102,6 +103,7 @@ const GameScreen = () => {
       />
       <button onClick={startGame}>Start Game</button>
       <button onClick={signOut}>Logout</button>
+      <div>Score: {score}</div>
     </div>
   );
 };
