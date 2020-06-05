@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useInterval } from "../useInterval";
+
 import {
   CANVAS_SIZE,
   SNAKE_START,
@@ -99,43 +99,6 @@ export default () => {
     return false;
   };
 
-  // GAME LOOP
-  const gameLoop = () => {
-    const snakeCopy = JSON.parse(JSON.stringify(snake));
-    const newSnakeHead = [
-      snakeCopy[0][0] + direction[0],
-      snakeCopy[0][1] + direction[1],
-    ];
-    snakeCopy.unshift(newSnakeHead);
-    if (checkCollision(newSnakeHead)) {
-      endGame();
-    }
-    if (!checkAppleCollision(snakeCopy)) {
-      snakeCopy.pop();
-    }
-    if (checkMineCollision(snakeCopy)) {
-      setMineHit(true);
-    }
-    setSnake(snakeCopy);
-  };
-
-  useEffect(() => {
-    if (boundaryHit) {
-      setMessage("Hit the end of the world");
-    } else {
-      setMessage("You ate yourself");
-    }
-  }, [boundaryHit]);
-
-  useEffect(() => {
-    if (mineHit) {
-      setMessage("Boom!!!");
-      endGame();
-    }
-  }, [mineHit]);
-
-  useInterval(() => gameLoop(), speed);
-
   return {
     startGame,
     gameOver,
@@ -146,5 +109,16 @@ export default () => {
     snake,
     apple,
     mine,
+    direction,
+    checkCollision,
+    checkAppleCollision,
+    checkMineCollision,
+    setMineHit,
+    mineHit,
+    boundaryHit,
+    setSnake,
+    setMessage,
+    endGame,
+    speed
   };
 };

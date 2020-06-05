@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
 import firebase from "firebase";
-import Game from "./game-parts";
-import Login from "./login";
-import Register from "./signup";
 
 export default () => {
   const [authenticated, setAuthenticated] = useState(false);
@@ -68,21 +65,6 @@ export default () => {
   const handleLogin = (e) => {
     e.preventDefault();
     loginUser();
-    // setLogin(false);
-  };
-
-  const signOut = () => {
-    firebase
-      .auth()
-      .signOut()
-      .then(
-        function () {
-          // Sign-out successful.
-        },
-        function (error) {
-          // An error happened.
-        }
-      );
   };
 
   const loginUser = () => {
@@ -107,7 +89,6 @@ export default () => {
   return {
     setUserID,
     loginUser,
-    signOut,
     handleLogin,
     getUserData,
     writeDisplayName,
