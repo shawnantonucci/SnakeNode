@@ -8,10 +8,10 @@ const AuthenticateScreen = () => {
 
   return (
     <>
-      {authChoice ? <Login /> : <Register />}
       <button onClick={() => setAuthChoice(!authChoice)}>
-        {authChoice ? "Register Account" : "Login to the game"}
+        {authChoice ? "Switch to Register" : "Switch to Login"}
       </button>
+      {authChoice ? <Login /> : <Register />}
     </>
   );
 };
