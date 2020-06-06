@@ -4,7 +4,7 @@ import User from "./user";
 const Signup = () => {
   const { createUser, email, setEmail, password, setPassword } = User();
   const [displayName, setDisplayName] = useState("");
-  if (displayName != "") localStorage.setItem("username", displayName);
+  if (displayName === "") localStorage.setItem("username", displayName);
 
   const handleSignUp = (e) => {
     e.preventDefault();

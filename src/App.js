@@ -8,8 +8,8 @@ import firebase from "firebase";
 import db from "./config";
 
 export const GameCtx = createContext({
-  scaleSettings: [40, () => { }],
-})
+  scaleSettings: [40, () => {}],
+});
 
 const App = () => {
   const { gameOver, startGame, moveSnake, message } = Game();
@@ -21,12 +21,16 @@ const App = () => {
       const userName = localStorage.getItem("username");
       db.collection("users")
         .doc(user.uid)
-        .set({
-          displayName: userName,
-          email: user.email,
-          uid: user.uid,
-        })
-        .then(function () { })
+        .set(
+          {
+            displayName: userName,
+            email: user.email,
+            uid: user.uid,
+          },
+          { merge: true }
+        )
+
+        .then(function () {})
         .catch(function (error) {
           console.error("Error writing document: ", error);
         });
@@ -63,7 +67,6 @@ const App = () => {
     }
   };
 
-
   useEffect(() => {
     getUserData();
   }, [authenticated]);
@@ -79,8 +82,8 @@ const App = () => {
           <div>Arrow keys to move around</div>
         </>
       ) : (
-          <AuthenicatedScreen />
-        )}
+        <AuthenicatedScreen />
+      )}
     </GameCtx.Provider>
   );
 };
