@@ -47,6 +47,7 @@ export default () => {
     setGameOver(true);
     updateScore();
     setBoundaryHit(false);
+    setPrevKeyCode(38)
   };
 
   const updateScore = () => {
@@ -67,11 +68,16 @@ export default () => {
   };
 
   const moveSnake = ({ keyCode }) => {
-    if (keyCode !== REVERSEDIRECTIONS[prevKeyCode] && canMove) {
-      keyCode >= 37 && keyCode <= 40 && setDirection(DIRECTIONS[keyCode]);
-      setCanMove(false);
+    if (keyCode >= 37 && keyCode <= 40) {
+      console.log(prevKeyCode, keyCode)
+      if (keyCode !== REVERSEDIRECTIONS[prevKeyCode] && canMove) {
+        setCanMove(false);
+        setDirection(DIRECTIONS[keyCode])
+
+
+        setPrevKeyCode(keyCode);
+      }
     }
-    setPrevKeyCode(keyCode);
   };
 
   const spawnApple = () =>

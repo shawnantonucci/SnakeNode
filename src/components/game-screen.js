@@ -45,42 +45,6 @@ const GameScreen = ({ user }) => {
       );
   };
 
-  // // GAME LOOP
-  // const gameLoop = () => {
-  //   const snakeCopy = JSON.parse(JSON.stringify(snake));
-  //   const newSnakeHead = [
-  //     snakeCopy[0][0] + direction[0],
-  //     snakeCopy[0][1] + direction[1],
-  //   ];
-  //   snakeCopy.unshift(newSnakeHead);
-  //   if (checkCollision(newSnakeHead)) {
-  //     endGame();
-  //   }
-  //   if (!checkAppleCollision(snakeCopy)) {
-  //     snakeCopy.pop();
-  //   }
-  //   if (checkMineCollision(snakeCopy)) {
-  //     setMineHit(true);
-  //   }
-  //   setSnake(snakeCopy);
-  // };
-
-  // useEffect(() => {
-  //   if (boundaryHit) {
-  //     setMessageText("Hit the end of the world");
-  //   } else {
-  //     setMessageText("You ate yourself");
-  //   }
-  // }, [boundaryHit]);
-
-  // useEffect(() => {
-  //   if (mineHit) {
-  //     setMessageText("Boom!!!");
-  //     endGame();
-  //   }
-  // }, [mineHit]);
-
-  // useInterval(() => gameLoop(), speed);
 
   useEffect(() => {
     const context = canvasRef.current.getContext("2d");
