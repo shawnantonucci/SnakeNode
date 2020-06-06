@@ -59,31 +59,19 @@ export default () => {
     // setScale(10)
   };
 
-  const updateScore = () => {
-    // const user = firebase.auth().currentUser;
-    // const userRef = db.collection("users").doc(user.uid);
+  const updateScore = async () => {
+    const { data } = await Axios.get(`http://localhost:5000/users/${_id}`);
 
-    // return userRef
-    //   .update({
-    //     score: score,
-    //   })
-    //   .then(function () {
-    //     console.log("Document successfully updated!");
-    //   })
-    //   .catch(function (error) {
-    //     // The document probably doesn't exist.
-    //     console.error("Error updating document: ", error);
-    //   });
-
-    const user = {
-      username,
-      score,
-    };
-
-    Axios.post(
-      `http://localhost:5000/users/update/${_id}`,
-      user
-    ).then((res) => {});
+    if (data.score < score) {
+      const user = {
+        username,
+        score,
+      };
+      Axios.post(
+        `http://localhost:5000/users/update/${_id}`,
+        user
+      ).then((res) => {});
+    }
   };
 
   const moveSnake = ({ keyCode }) => {
