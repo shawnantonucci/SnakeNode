@@ -8,7 +8,7 @@ import firebase from "firebase";
 import db from "./config";
 
 export const GameCtx = createContext({
-  scaleSettings: [20, () => { }],
+  scaleSettings: [40, () => { }],
 })
 
 const App = () => {

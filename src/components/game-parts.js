@@ -53,7 +53,7 @@ export default () => {
     updateScore();
     setBoundaryHit(false);
     setPrevKeyCode(38);
-    setScale(10)
+    // setScale(10)
   };
 
   const updateScore = () => {

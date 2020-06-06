@@ -1,5 +1,5 @@
 const CANVAS_SIZE = [800, 800];
-const SPEED = 150;
+const SPEED = 125;
 const SNAKE_START = [
   [8, 7],
   [8, 8],
