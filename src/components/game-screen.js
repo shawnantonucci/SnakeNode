@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import firebase from "firebase";
 import { CANVAS_SIZE, SCALE } from "../constants";
-import { useInterval } from "../useInterval";
+// import { useInterval } from "../useInterval";
 import Game from "./game-parts";
 
-const GameScreen = () => {
+const GameScreen = ({ user }) => {
   const {
     canvasRef,
     snake,
@@ -24,8 +24,12 @@ const GameScreen = () => {
     speed,
     moveSnake,
     startGame,
-    score
+    message,
+    score,
+    gameLoop,
   } = Game();
+
+  // const [messageText, setMessageText] = useState("");
 
   const signOut = () => {
     firebase
@@ -41,42 +45,42 @@ const GameScreen = () => {
       );
   };
 
-  // GAME LOOP
-  const gameLoop = () => {
-    const snakeCopy = JSON.parse(JSON.stringify(snake));
-    const newSnakeHead = [
-      snakeCopy[0][0] + direction[0],
-      snakeCopy[0][1] + direction[1],
-    ];
-    snakeCopy.unshift(newSnakeHead);
-    if (checkCollision(newSnakeHead)) {
-      endGame();
-    }
-    if (!checkAppleCollision(snakeCopy)) {
-      snakeCopy.pop();
-    }
-    if (checkMineCollision(snakeCopy)) {
-      setMineHit(true);
-    }
-    setSnake(snakeCopy);
-  };
+  // // GAME LOOP
+  // const gameLoop = () => {
+  //   const snakeCopy = JSON.parse(JSON.stringify(snake));
+  //   const newSnakeHead = [
+  //     snakeCopy[0][0] + direction[0],
+  //     snakeCopy[0][1] + direction[1],
+  //   ];
+  //   snakeCopy.unshift(newSnakeHead);
+  //   if (checkCollision(newSnakeHead)) {
+  //     endGame();
+  //   }
+  //   if (!checkAppleCollision(snakeCopy)) {
+  //     snakeCopy.pop();
+  //   }
+  //   if (checkMineCollision(snakeCopy)) {
+  //     setMineHit(true);
+  //   }
+  //   setSnake(snakeCopy);
+  // };
 
-  useEffect(() => {
-    if (boundaryHit) {
-      setMessage("Hit the end of the world");
-    } else {
-      setMessage("You ate yourself");
-    }
-  }, [boundaryHit]);
+  // useEffect(() => {
+  //   if (boundaryHit) {
+  //     setMessageText("Hit the end of the world");
+  //   } else {
+  //     setMessageText("You ate yourself");
+  //   }
+  // }, [boundaryHit]);
 
-  useEffect(() => {
-    if (mineHit) {
-      setMessage("Boom!!!");
-      endGame();
-    }
-  }, [mineHit]);
+  // useEffect(() => {
+  //   if (mineHit) {
+  //     setMessageText("Boom!!!");
+  //     endGame();
+  //   }
+  // }, [mineHit]);
 
-  useInterval(() => gameLoop(), speed);
+  // useInterval(() => gameLoop(), speed);
 
   useEffect(() => {
     const context = canvasRef.current.getContext("2d");
@@ -101,9 +105,13 @@ const GameScreen = () => {
         width={`${CANVAS_SIZE[0]}px`}
         height={`${CANVAS_SIZE[1]}px`}
       />
+
+      <p>{message}</p>
       <button onClick={startGame}>Start Game</button>
       <button onClick={signOut}>Logout</button>
-      <div>Score: {score}</div>
+      <div>
+        {user && user.displayName} Score: {score}
+      </div>
     </div>
   );
 };

@@ -8,13 +8,20 @@ const SNAKE_START = [
 const APPLE_START = [8, 3];
 const MINE_START = [
   Math.floor(Math.random() * (CANVAS_SIZE / SCALE)),
-  Math.floor(Math.random() * (CANVAS_SIZE / SCALE))
+  Math.floor(Math.random() * (CANVAS_SIZE / SCALE)),
 ];
 const DIRECTIONS = {
   38: [0, -1], // up
   40: [0, 1], // down
   37: [-1, 0], // left
   39: [1, 0], // right
+};
+
+const REVERSEDIRECTIONS = {
+  38: 40,
+  40: 38,
+  37: 39,
+  39: 37,
 };
 
 export {
@@ -25,4 +32,5 @@ export {
   SCALE,
   SPEED,
   DIRECTIONS,
+  REVERSEDIRECTIONS
 };
