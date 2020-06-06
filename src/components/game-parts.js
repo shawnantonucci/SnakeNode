@@ -118,7 +118,6 @@ export default () => {
       setMine(newMine);
       newScore += 1;
       setScore(newScore);
-      console.log(newScore);
       return true;
     }
     return false;
