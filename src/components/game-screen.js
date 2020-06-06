@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, createContext } from "react";
 import firebase from "firebase";
-import { CANVAS_SIZE, SCALE } from "../constants";
+import { CANVAS_SIZE } from "../constants";
 // import { useInterval } from "../useInterval";
 import Game from "./game-parts";
 
+import { GameCtx } from '../App';
+
 const GameScreen = ({ user }) => {
+  const { scaleSettings } = useContext(GameCtx);
+  const [SCALE] = scaleSettings;
+
   const {
     canvasRef,
     snake,
@@ -29,7 +34,6 @@ const GameScreen = ({ user }) => {
     gameLoop,
   } = Game();
 
-  // const [messageText, setMessageText] = useState("");
 
   const signOut = () => {
     firebase
@@ -48,7 +52,7 @@ const GameScreen = ({ user }) => {
 
   useEffect(() => {
     const context = canvasRef.current.getContext("2d");
-    context.setTransform(SCALE, 0, 0, SCALE, 0, 0);
+    context.setTransform(SCALE, 0, 0, SCALE, 1, 0);
     context.clearRect(0, 0, CANVAS_SIZE[0], CANVAS_SIZE[1]);
     context.fillStyle = "green";
     context.shadowColor = "black";

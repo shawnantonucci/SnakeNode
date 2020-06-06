@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import Game from "./components/game-parts";
 import User from "./components/user";
 import GameScreen from "./components/game-screen";
@@ -6,6 +6,10 @@ import AuthenicatedScreen from "./components/authenticate-screen";
 import firebaseConfig from "./config";
 import firebase from "firebase";
 import db from "./config";
+
+export const GameCtx = createContext({
+  scaleSettings: [20, () => { }],
+})
 
 const App = () => {
   const { gameOver, startGame, moveSnake, message } = Game();
@@ -22,7 +26,7 @@ const App = () => {
           email: user.email,
           uid: user.uid,
         })
-        .then(function () {})
+        .then(function () { })
         .catch(function (error) {
           console.error("Error writing document: ", error);
         });
@@ -59,14 +63,15 @@ const App = () => {
     }
   };
 
-  console.log(user, "user");
 
   useEffect(() => {
     getUserData();
   }, [authenticated]);
 
+  const scaleSettings = useState(20);
+
   return (
-    <>
+    <GameCtx.Provider value={{ scaleSettings }}>
       {authenticated && <GameScreen user={user} message={message} />}
       {authenticated ? (
         <>
@@ -74,9 +79,9 @@ const App = () => {
           <div>Arrow keys to move around</div>
         </>
       ) : (
-        <AuthenicatedScreen />
-      )}
-    </>
+          <AuthenicatedScreen />
+        )}
+    </GameCtx.Provider>
   );
 };
 

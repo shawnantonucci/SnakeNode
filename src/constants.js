@@ -1,5 +1,4 @@
 const CANVAS_SIZE = [800, 800];
-const SCALE = 40;
 const SPEED = 150;
 const SNAKE_START = [
   [8, 7],
@@ -7,8 +6,8 @@ const SNAKE_START = [
 ];
 const APPLE_START = [8, 3];
 const MINE_START = [
-  Math.floor(Math.random() * (CANVAS_SIZE / SCALE)),
-  Math.floor(Math.random() * (CANVAS_SIZE / SCALE)),
+  Math.floor(Math.random() * (CANVAS_SIZE / 20)),
+  Math.floor(Math.random() * (CANVAS_SIZE / 20)),
 ];
 const DIRECTIONS = {
   38: [0, -1], // up
@@ -29,7 +28,6 @@ export {
   SNAKE_START,
   APPLE_START,
   MINE_START,
-  SCALE,
   SPEED,
   DIRECTIONS,
   REVERSEDIRECTIONS

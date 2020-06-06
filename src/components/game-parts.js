@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import firebase from "firebase";
 import db from "../config";
 import {
@@ -6,14 +6,19 @@ import {
   SNAKE_START,
   APPLE_START,
   MINE_START,
-  SCALE,
   SPEED,
   DIRECTIONS,
   REVERSEDIRECTIONS,
 } from "../constants";
 import { useInterval } from "../useInterval";
+import { GameCtx } from '../App';
+
 
 export default () => {
+  const { scaleSettings } = useContext(GameCtx);
+
+  const [SCALE, setScale] = scaleSettings;
+
   const canvasRef = useRef(null);
   const [snake, setSnake] = useState(SNAKE_START);
   const [apple, setApple] = useState(APPLE_START);
@@ -47,7 +52,8 @@ export default () => {
     setGameOver(true);
     updateScore();
     setBoundaryHit(false);
-    setPrevKeyCode(38)
+    setPrevKeyCode(38);
+    setScale(10)
   };
 
   const updateScore = () => {
@@ -86,15 +92,6 @@ export default () => {
     mine.map((_a, i) => Math.floor(Math.random() * (CANVAS_SIZE[i] / SCALE)));
 
   const checkCollision = (head, snk = snake) => {
-    if (
-      head[0] * SCALE >= CANVAS_SIZE[0] ||
-      head[0] < 0 ||
-      head[1] * SCALE >= CANVAS_SIZE[1] ||
-      head[1] < 0
-    ) {
-      setBoundaryHit(true);
-      return true;
-    }
     for (const segment of snk) {
       if (head[0] === segment[0] && head[1] === segment[1]) {
         setBoundaryHit(false);
@@ -108,6 +105,9 @@ export default () => {
   const checkAppleCollision = (newSnake) => {
     let newScore = score;
     if (newSnake[0][0] === apple[0] && newSnake[0][1] === apple[1]) {
+      // this is where we are setting the scaling option! decrease to zoom out.
+      // setScale(SCALE - 5)
+
       let newApple = spawnApple();
       let newMine = spawnMine();
       while (checkCollision(newApple, newSnake)) {
@@ -138,6 +138,32 @@ export default () => {
     return false;
   };
 
+
+  const translateSegments = (sn) => {
+    const [caX, caY] = CANVAS_SIZE
+
+    for (let i = 0; i < sn.length; i++) {
+      const [snX, snY] = sn[i];
+
+      if (snX * SCALE >= caX || snX < 0) {
+        const trans = (snX <= 0) ? Math.abs(caX / SCALE) : 0;
+        console.log('hmmm')
+        sn[i] = [trans, snY]
+      } else if (snY * SCALE >= caY || snY < 0) {
+        const trans = (snY <= 0) ? Math.abs(caY / SCALE) : 0;
+        console.log('hmmm2', snY * SCALE >= caY, snY <= 0)
+
+        sn[i] = [snX, trans];
+      }
+    }
+
+    console.log(sn)
+
+    // MIC DIED!
+
+    return sn;
+  }
+
   // GAME LOOP
   const gameLoop = () => {
     setCanMove(true);
@@ -156,7 +182,7 @@ export default () => {
     if (checkMineCollision(snakeCopy)) {
       setMineHit(true);
     }
-    setSnake(snakeCopy);
+    setSnake(translateSegments(snakeCopy));
   };
 
   useEffect(() => {
