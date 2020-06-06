@@ -11,11 +11,12 @@ import {
   REVERSEDIRECTIONS,
 } from "../constants";
 import { useInterval } from "../useInterval";
-import { GameCtx } from '../App';
-
+import { GameCtx } from "../App";
+import User from "./user";
+import Axios from "axios";
 
 export default () => {
-  const { scaleSettings } = useContext(GameCtx);
+  const { scaleSettings, _id, username } = useContext(GameCtx);
 
   const [SCALE, setScale] = scaleSettings;
 
@@ -33,6 +34,8 @@ export default () => {
   const [message, setMessage] = useState("");
   const [score, setScore] = useState(0);
   const [prevKeyCode, setPrevKeyCode] = useState(38);
+
+  const { users, setUsers } = User();
 
   const startGame = () => {
     setScore(0);
@@ -57,29 +60,37 @@ export default () => {
   };
 
   const updateScore = () => {
-    const user = firebase.auth().currentUser;
-    const userRef = db.collection("users").doc(user.uid);
+    // const user = firebase.auth().currentUser;
+    // const userRef = db.collection("users").doc(user.uid);
 
-    return userRef
-      .update({
-        score: score,
-      })
-      .then(function () {
-        console.log("Document successfully updated!");
-      })
-      .catch(function (error) {
-        // The document probably doesn't exist.
-        console.error("Error updating document: ", error);
-      });
+    // return userRef
+    //   .update({
+    //     score: score,
+    //   })
+    //   .then(function () {
+    //     console.log("Document successfully updated!");
+    //   })
+    //   .catch(function (error) {
+    //     // The document probably doesn't exist.
+    //     console.error("Error updating document: ", error);
+    //   });
+
+    const user = {
+      username,
+      score,
+    };
+
+    Axios.post(
+      `http://localhost:5000/users/update/${_id}`,
+      user
+    ).then((res) => {});
   };
 
   const moveSnake = ({ keyCode }) => {
     if (keyCode >= 37 && keyCode <= 40) {
-      console.log(prevKeyCode, keyCode)
       if (keyCode !== REVERSEDIRECTIONS[prevKeyCode] && canMove) {
         setCanMove(false);
-        setDirection(DIRECTIONS[keyCode])
-
+        setDirection(DIRECTIONS[keyCode]);
 
         setPrevKeyCode(keyCode);
       }
@@ -137,31 +148,26 @@ export default () => {
     return false;
   };
 
-
   const translateSegments = (sn) => {
-    const [caX, caY] = CANVAS_SIZE
+    const [caX, caY] = CANVAS_SIZE;
 
     for (let i = 0; i < sn.length; i++) {
       const [snX, snY] = sn[i];
 
       if (snX * SCALE >= caX || snX < 0) {
-        const trans = (snX <= 0) ? Math.abs(caX / SCALE) : 0;
-        console.log('hmmm')
-        sn[i] = [trans, snY]
+        const trans = snX <= 0 ? Math.abs(caX / SCALE) : 0;
+        console.log("hmmm");
+        sn[i] = [trans, snY];
       } else if (snY * SCALE >= caY || snY < 0) {
-        const trans = (snY <= 0) ? Math.abs(caY / SCALE) : 0;
-        console.log('hmmm2', snY * SCALE >= caY, snY <= 0)
+        const trans = snY <= 0 ? Math.abs(caY / SCALE) : 0;
+        console.log("hmmm2", snY * SCALE >= caY, snY <= 0);
 
         sn[i] = [snX, trans];
       }
     }
 
-    console.log(sn)
-
-    // MIC DIED!
-
     return sn;
-  }
+  };
 
   // GAME LOOP
   const gameLoop = () => {

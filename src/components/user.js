@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import firebase from "firebase";
 import db from "../config";
+import Axios from "axios";
 
 export default () => {
   const [authenticated, setAuthenticated] = useState(false);
@@ -8,12 +9,14 @@ export default () => {
   const [gameStart, setGameStart] = useState(false);
   // const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
+  const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [userId, setUserID] = useState("");
   const [date, setDate] = useState(Date.now());
+  const [users, setUsers] = useState();
 
-  const createUser = () => {
-    firebase
+  const createUser = async () => {
+    await firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .catch(function (error) {
@@ -23,6 +26,17 @@ export default () => {
         console.log(errorMessage);
         return setGameStart(false);
       });
+
+    const firebaseUser = await firebase.auth().currentUser;
+
+    const user = {
+      username: username,
+      email: email,
+      uid: firebaseUser.uid,
+    };
+
+    Axios.post("http://localhost:5000/users/add", user).then((res) => {});
+
     setAuthenticated(true);
     return setGameStart(true);
   };
@@ -49,8 +63,8 @@ export default () => {
       .signInWithEmailAndPassword(email, password)
       .catch(function (error) {
         // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
+        const errorCode = error.code;
+        const errorMessage = error.message;
         console.log(errorMessage);
         return setGameStart(false);
       });
@@ -60,12 +74,16 @@ export default () => {
 
   return {
     setUserID,
+    setUsers,
+    users,
     loginUser,
     handleLogin,
     createUser,
     writeUserData,
     email,
     setEmail,
+    username,
+    setUserName,
     password,
     setPassword,
     setGameStart,

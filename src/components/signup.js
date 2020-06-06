@@ -1,10 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import User from "./user";
 
 const Signup = () => {
-  const { createUser, email, setEmail, password, setPassword } = User();
-  const [displayName, setDisplayName] = useState("");
-  if (displayName === "") localStorage.setItem("username", displayName);
+  const { createUser, email, setEmail, password, setPassword, username, setUserName } = User();
 
   const handleSignUp = (e) => {
     e.preventDefault();
@@ -18,8 +16,8 @@ const Signup = () => {
         DisplayName
         <input
           type="text"
-          value={displayName}
-          onChange={(e) => setDisplayName(e.target.value)}
+          value={username}
+          onChange={(e) => setUserName(e.target.value)}
         />
       </label>
       <label>

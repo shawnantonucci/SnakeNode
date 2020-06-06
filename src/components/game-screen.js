@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
 import firebase from "firebase";
 import { CANVAS_SIZE } from "../constants";
-// import { useInterval } from "../useInterval";
 import Game from "./game-parts";
 
-import { GameCtx } from '../App';
+import { GameCtx } from "../App";
 
-const GameScreen = ({ user }) => {
+const GameScreen = ({ username, logOut }) => {
   const { scaleSettings } = useContext(GameCtx);
   const [SCALE] = scaleSettings;
 
@@ -16,26 +15,14 @@ const GameScreen = ({ user }) => {
     apple,
     mine,
     gameOver,
-    checkCollision,
-    checkAppleCollision,
-    checkMineCollision,
-    endGame,
-    setMineHit,
-    setSnake,
-    direction,
-    boundaryHit,
-    setMessage,
-    mineHit,
-    speed,
     moveSnake,
     startGame,
     message,
     score,
-    gameLoop,
   } = Game();
 
-
   const signOut = () => {
+    logOut();
     firebase
       .auth()
       .signOut()
@@ -48,7 +35,6 @@ const GameScreen = ({ user }) => {
         }
       );
   };
-
 
   useEffect(() => {
     const context = canvasRef.current.getContext("2d");
@@ -78,7 +64,7 @@ const GameScreen = ({ user }) => {
       <button onClick={startGame}>Start Game</button>
       <button onClick={signOut}>Logout</button>
       <div>
-        {user && user.displayName} Score: {score}
+        {username && username} Score: {score}
       </div>
     </div>
   );

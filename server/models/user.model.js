@@ -11,6 +11,16 @@ const userSchema = new Schema(
       trim: true,
       minlength: 3,
     },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    uid: {
+      type: String,
+      required: false,
+    },
     score: {
       type: Number,
       required: false,
