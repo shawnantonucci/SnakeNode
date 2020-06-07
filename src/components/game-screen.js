@@ -12,7 +12,7 @@ const GameScreen = ({ username, logOut }) => {
     canvasRef,
     snake,
     apple,
-    mine,
+    glMines,
     gameOver,
     moveSnake,
     startGame,
@@ -44,11 +44,16 @@ const GameScreen = ({ username, logOut }) => {
     context.shadowColor = "black";
     context.shadowBlur = 1;
     snake.forEach(([x, y]) => context.fillRect(x, y, 1, 1));
+
     context.fillStyle = "red";
     context.fillRect(apple[0], apple[1], 1, 1);
-    context.fillStyle = "black";
-    context.fillRect(mine[0], mine[1], 1, 1);
-  }, [snake, apple, gameOver, mine]);
+
+    glMines.forEach(mine => {
+      context.fillStyle = "black";
+      context.fillRect(mine[0], mine[1], 1, 1);
+    })
+
+  }, [snake, apple, gameOver, glMines]);
 
   return (
     <div role="button" tabIndex="0" onKeyDown={(e) => moveSnake(e)}>
