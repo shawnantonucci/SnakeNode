@@ -10,7 +10,7 @@
 
 # production
 /build
-debug.log*
+debug.log
 
 # misc
 .DS_Store
@@ -31,4 +31,4 @@ yarn-error.log*
 
 ### Firebase Patch ###
 .runtimeconfig.json
-.firebase/
+/.firebase
