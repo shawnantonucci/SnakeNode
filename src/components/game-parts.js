@@ -22,7 +22,7 @@ export default () => {
   const canvasRef = useRef(null);
   const [snake, setSnake] = useState(SNAKE_START);
   const [apple, setApple] = useState(APPLE_START);
-  const [mine, setMine] = useState(MINE_START);
+  const [glMines, setMines] = useState([]);
   const [direction, setDirection] = useState([0, -1]);
   const [speed, setSpeed] = useState(null);
   const [gameOver, setGameOver] = useState(false);
@@ -48,6 +48,8 @@ export default () => {
     setBoundaryHit(false);
     setMessage("");
     setSelf(false);
+
+    setMines(spawnMines(0))
   };
 
   const endGame = () => {
@@ -82,7 +84,7 @@ export default () => {
         `${url}/users/update/${_id}`,
         // `http://localhost:5000/users/update/${_id}`,
         user
-      ).then((res) => {});
+      ).then((res) => { });
     }
   };
 
@@ -99,8 +101,20 @@ export default () => {
 
   const spawnApple = () =>
     apple.map((_a, i) => Math.floor(Math.random() * (CANVAS_SIZE[i] / SCALE)));
-  const spawnMine = () =>
-    mine.map((_a, i) => Math.floor(Math.random() * (CANVAS_SIZE[i] / SCALE)));
+
+  const spawnMines = (level) => {
+    const mines = [];
+    const f = [0, 1]
+    const cnt = (level > 10) ? ~~(level / 10) + 1 : 1;
+    for (let i = 0; i < cnt; i++) {
+      const rndCords = f.map((_a, i) => Math.floor(Math.random() * (CANVAS_SIZE[i] / SCALE)))
+      mines.push(rndCords)
+    }
+
+    console.log('SPAWNING MINES', mines)
+    return mines
+  }
+
 
   const checkCollision = (head, snk = snake) => {
     for (const segment of snk) {
@@ -118,15 +132,14 @@ export default () => {
     if (newSnake[0][0] === apple[0] && newSnake[0][1] === apple[1]) {
       // this is where we are setting the scaling option! decrease to zoom out.
       // setScale(SCALE - 5)
+      const mines = spawnMines(score)
+      setMines(mines)
 
       let newApple = spawnApple();
-      let newMine = spawnMine();
       while (checkCollision(newApple, newSnake)) {
         newApple = spawnApple();
-        newMine = spawnMine();
       }
       setApple(newApple);
-      setMine(newMine);
       newScore += 1;
       setScore(newScore);
       return true;
@@ -134,18 +147,14 @@ export default () => {
     return false;
   };
 
-  const checkMineCollision = (newSnake) => {
-    if (newSnake[0][0] === mine[0] && newSnake[0][1] === mine[1]) {
-      setMineHit(true);
-      let newMine = spawnMine();
-      while (checkCollision(newMine, newSnake)) {
-        newMine = spawnMine();
-      }
-      setMine(newMine);
-      return true;
+  const checkMineCollision = (mines, snake) => {
+    if (mines.length < 0) {
+      return false;
     }
-    setMineHit(false);
-    return false;
+
+    const isCollision = mines.some(mine => snake[0][0] === mine[0] && snake[0][1] === mine[1])
+
+    return isCollision
   };
 
   const translateSegments = (sn) => {
@@ -156,11 +165,9 @@ export default () => {
 
       if (snX * SCALE >= caX || snX < 0) {
         const trans = snX <= 0 ? Math.abs(caX / SCALE) : 0;
-        console.log("hmmm");
         sn[i] = [trans, snY];
       } else if (snY * SCALE >= caY || snY < 0) {
         const trans = snY <= 0 ? Math.abs(caY / SCALE) : 0;
-        console.log("hmmm2", snY * SCALE >= caY, snY <= 0);
 
         sn[i] = [snX, trans];
       }
@@ -171,7 +178,9 @@ export default () => {
 
   // GAME LOOP
   const gameLoop = () => {
+    console.log('game loop started!!!')
     setCanMove(true);
+
     const snakeCopy = JSON.parse(JSON.stringify(snake));
     const newSnakeHead = [
       snakeCopy[0][0] + direction[0],
@@ -184,7 +193,7 @@ export default () => {
     if (!checkAppleCollision(snakeCopy)) {
       snakeCopy.pop();
     }
-    if (checkMineCollision(snakeCopy)) {
+    if (checkMineCollision(glMines, snakeCopy)) {
       setMineHit(true);
     }
     setSnake(translateSegments(snakeCopy));
@@ -224,7 +233,7 @@ export default () => {
     canvasRef,
     snake,
     apple,
-    mine,
+    glMines,
     direction,
     checkCollision,
     checkAppleCollision,
