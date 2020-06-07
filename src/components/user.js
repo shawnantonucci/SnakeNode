@@ -1,13 +1,11 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState } from "react";
 import firebase from "firebase";
-import db from "../config";
 import Axios from "axios";
 
 export default () => {
   const [authenticated, setAuthenticated] = useState(false);
   const [authChoice, setAuthChoice] = useState(false);
   const [gameStart, setGameStart] = useState(false);
-  // const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -35,7 +33,7 @@ export default () => {
       uid: firebaseUser.uid,
     };
 
-    Axios.post("http://localhost:5000/users/add", user).then((res) => {});
+    Axios.post("https://mern-snake.herokuapp.com/users/add", user).then((res) => {});
 
     setAuthenticated(true);
     return setGameStart(true);

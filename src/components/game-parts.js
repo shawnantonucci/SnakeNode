@@ -1,6 +1,4 @@
 import { useState, useEffect, useRef, useContext } from "react";
-import firebase from "firebase";
-import db from "../config";
 import {
   CANVAS_SIZE,
   SNAKE_START,
@@ -34,6 +32,7 @@ export default () => {
   const [message, setMessage] = useState("");
   const [score, setScore] = useState(0);
   const [prevKeyCode, setPrevKeyCode] = useState(38);
+  const [highScore, setHighScore] = useState(0);
 
   const { users, setUsers } = User();
 
@@ -59,16 +58,28 @@ export default () => {
     // setScale(10)
   };
 
-  const updateScore = async () => {
-    const { data } = await Axios.get(`http://localhost:5000/users/${_id}`);
+  const checkScore = async () => {
+    const { data } = await Axios.get(
+      `https://mern-snake.herokuapp.com/users/${_id}`
+      // `http://localhost:5000/users/${_id}`
+    );
+    setHighScore(data.score);
+  };
 
-    if (data.score < score) {
+  const updateScore = async () => {
+    const { data } = await Axios.get(
+      `https://mern-snake.herokuapp.com/users/${_id}`
+      // `http://localhost:5000/users/${_id}`
+    );
+
+    if (data.score < score || data.score === undefined) {
       const user = {
         username,
         score,
       };
       Axios.post(
-        `http://localhost:5000/users/update/${_id}`,
+        `https://mern-snake.herokuapp.com/users/update/${_id}`,
+        // `http://localhost:5000/users/update/${_id}`,
         user
       ).then((res) => {});
     }
@@ -197,6 +208,10 @@ export default () => {
     }
   }, [mineHit]);
 
+  useEffect(() => {
+    checkScore();
+  }, [gameOver]);
+
   useInterval(() => gameLoop(), speed);
 
   return {
@@ -220,6 +235,8 @@ export default () => {
     setMessage,
     endGame,
     speed,
+    checkScore,
     gameLoop,
+    highScore,
   };
 };

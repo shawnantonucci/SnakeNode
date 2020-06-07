@@ -3,7 +3,7 @@ import Game from "./components/game-parts";
 import User from "./components/user";
 import GameScreen from "./components/game-screen";
 import AuthenicatedScreen from "./components/authenticate-screen";
-// import firebaseConfig from "./config";
+import firebaseConfig from "./config";
 import firebase from "firebase";
 import Axios from "axios";
 
@@ -30,7 +30,8 @@ const App = () => {
   firebase.auth().onAuthStateChanged(async (user) => {
     if (user) {
       setUser(user.email);
-      const { data } = await Axios.get("http://localhost:5000/users");
+      const { data } = await Axios.get("https://mern-snake.herokuapp.com/users");
+      // const { data } = await Axios.get("http://localhost:5000/users");
       const currentUser = data.find(
         (dataUser) => dataUser.email === user.email
       );
@@ -42,27 +43,6 @@ const App = () => {
       setAuthenticated(false);
     }
   });
-
-  // useEffect(() => {
-  //   Axios.get("http://localhost:5000/users").then((response) => {
-  //     if (response.data.email === user) {
-  //       set_ID(response.data[0]._id);
-  //       setUserName(response.data[0].username);
-  //     }
-  //   });
-  // }, [authenticated]);
-
-  // useEffect(() => {
-  //   if (users) {
-  //     console.log("trying to get user");
-  //     Axios.get(`http://localhost:5000/users/${_id}`).then((response) => {
-  //       if (response.data.length > 0) {
-  //         setUserName(response.data.username);
-  //         set_ID(response.data._id);
-  //       }
-  //     });
-  //   }
-  // }, [authenticated]);
 
   const scaleSettings = useState(20);
 

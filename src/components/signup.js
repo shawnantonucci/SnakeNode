@@ -2,7 +2,15 @@ import React, { useState, useContext } from "react";
 import User from "./user";
 
 const Signup = () => {
-  const { createUser, email, setEmail, password, setPassword, username, setUserName } = User();
+  const {
+    createUser,
+    email,
+    setEmail,
+    password,
+    setPassword,
+    username,
+    setUserName,
+  } = User();
 
   const handleSignUp = (e) => {
     e.preventDefault();
