@@ -8,6 +8,7 @@ import {
   DIRECTIONS,
   REVERSEDIRECTIONS,
 } from "../constants";
+import { url } from '../config'
 import { useInterval } from "../useInterval";
 import { GameCtx } from "../App";
 import User from "./user";
@@ -60,7 +61,7 @@ export default () => {
 
   const checkScore = async () => {
     const { data } = await Axios.get(
-      `https://mern-snake.herokuapp.com/users/${_id}`
+      `${url}/users/${_id}`
       // `http://localhost:5000/users/${_id}`
     );
     setHighScore(data.score);
@@ -68,7 +69,7 @@ export default () => {
 
   const updateScore = async () => {
     const { data } = await Axios.get(
-      `https://mern-snake.herokuapp.com/users/${_id}`
+      `${url}/users/${_id}`
       // `http://localhost:5000/users/${_id}`
     );
 
@@ -78,7 +79,7 @@ export default () => {
         score,
       };
       Axios.post(
-        `https://mern-snake.herokuapp.com/users/update/${_id}`,
+        `${url}/users/update/${_id}`,
         // `http://localhost:5000/users/update/${_id}`,
         user
       ).then((res) => {});

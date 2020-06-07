@@ -1,4 +1,4 @@
-import firebase from 'firebase'
+import firebase from "firebase";
 // Set the configuration for your app
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -12,5 +12,9 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-export default db;
+firebase.analytics();
+
+export const url =
+  window.location.hostname === "localhost"
+    ? "http://localhost:5000"
+    : "https://mern-snake.herokuapp.com";

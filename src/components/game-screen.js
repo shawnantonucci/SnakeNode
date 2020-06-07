@@ -4,7 +4,7 @@ import { CANVAS_SIZE } from "../constants";
 import Game from "./game-parts";
 import { GameCtx } from "../App";
 
-const GameScreen = ({ username, logOut, _id }) => {
+const GameScreen = ({ username, logOut }) => {
   const { scaleSettings } = useContext(GameCtx);
   const [SCALE] = scaleSettings;
 

@@ -1,16 +1,17 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState, forwardRef } from "react";
 import Game from "./components/game-parts";
 import User from "./components/user";
 import GameScreen from "./components/game-screen";
 import AuthenicatedScreen from "./components/authenticate-screen";
 import firebaseConfig from "./config";
+import { url } from "./config";
 import firebase from "firebase";
 import Axios from "axios";
 
 export const GameCtx = createContext({
   scaleSettings: [40, () => {}],
   _id: "",
-  username: "",
+  username: ""
 });
 
 const App = () => {
@@ -19,7 +20,6 @@ const App = () => {
   const [user, setUser] = useState();
   const [_id, set_ID] = useState("");
   const [username, setUserName] = useState("");
-  const { users, setUsers } = User();
 
   const logOut = () => {
     set_ID("");
@@ -30,7 +30,7 @@ const App = () => {
   firebase.auth().onAuthStateChanged(async (user) => {
     if (user) {
       setUser(user.email);
-      const { data } = await Axios.get("https://mern-snake.herokuapp.com/users");
+      const { data } = await Axios.get(`${url}/users`);
       // const { data } = await Axios.get("http://localhost:5000/users");
       const currentUser = data.find(
         (dataUser) => dataUser.email === user.email
