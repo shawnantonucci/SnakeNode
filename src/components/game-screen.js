@@ -48,7 +48,6 @@ const GameScreen = ({ username, logOut }) => {
     context.fillStyle = "red";
     context.fillRect(apple[0], apple[1], 1, 1);
 
-    console.log(glMines)
     glMines.forEach(mine => {
       context.fillStyle = "black";
       context.fillRect(mine[0], mine[1], 1, 1);

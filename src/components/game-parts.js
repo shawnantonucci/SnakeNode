@@ -111,7 +111,6 @@ export default () => {
       mines.push(rndCords)
     }
 
-    console.log('SPAWNING MINES', mines)
     return mines
   }
 
