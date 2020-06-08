@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState, forwardRef } from "react";
+import React, { createContext, useEffect, useState, useMemo } from "react";
 import Game from "./components/game-parts";
 import User from "./components/user";
 import GameScreen from "./components/game-screen";
@@ -7,11 +7,13 @@ import firebaseConfig from "./config";
 import { url } from "./config";
 import firebase from "firebase";
 import Axios from "axios";
+import socketIOClient from "socket.io-client";
 
 export const GameCtx = createContext({
   scaleSettings: [40, () => {}],
   _id: "",
-  username: ""
+  username: "",
+  socket: null,
 });
 
 const App = () => {
@@ -20,6 +22,14 @@ const App = () => {
   const [user, setUser] = useState();
   const [_id, set_ID] = useState("");
   const [username, setUserName] = useState("");
+
+  // const socket = useMemo(() => socketIOClient("localhost:5000/tick"));
+  const socket = useMemo(() => socketIOClient("mern-snake.herokuapp.com/tick"));
+
+  useEffect(() => {
+    socket.on("connect", () => {});
+    // console.log("App -> socket", socket);
+  }, [socket]);
 
   const logOut = () => {
     set_ID("");
@@ -44,17 +54,15 @@ const App = () => {
     }
   });
 
-  const scaleSettings = useState(20);
+  const scaleSettings = useState(30);
 
   return (
-    <GameCtx.Provider value={{ scaleSettings, _id, username }}>
+    <GameCtx.Provider value={{ scaleSettings, _id, username, socket }}>
       {authenticated && (
         <GameScreen logOut={logOut} username={username} message={message} />
       )}
       {authenticated ? (
-        <>
-          {gameOver && <div>{message}... Game Over</div>}
-        </>
+        <>{gameOver && <div>{message}... Game Over</div>}</>
       ) : (
         <AuthenicatedScreen />
       )}

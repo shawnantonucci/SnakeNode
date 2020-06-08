@@ -11,13 +11,13 @@ const MINE_START = [
 ];
 const DIRECTIONS = {
   38: [0, -1], // up
-  87: [0, -1], // up
+  87: [0, -1], // up/w
   40: [0, 1], // down
-  83: [0, 1], // down
+  83: [0, 1], // down/s
   37: [-1, 0], // left
-  65: [-1, 0], // left
+  65: [-1, 0], // left/a
   39: [1, 0], // right
-  68: [1, 0], // right
+  68: [1, 0], // right/d
 };
 
 const REVERSEDIRECTIONS = {

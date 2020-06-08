@@ -15,8 +15,8 @@ import User from "./user";
 import Axios from "axios";
 
 export default () => {
-  const { scaleSettings, _id, username } = useContext(GameCtx);
-
+  const { scaleSettings, _id, username, socket } = useContext(GameCtx);
+  const [response, setResponse] = useState("");
   const [SCALE, setScale] = scaleSettings;
 
   const canvasRef = useRef(null);
@@ -34,10 +34,12 @@ export default () => {
   const [score, setScore] = useState(0);
   const [prevKeyCode, setPrevKeyCode] = useState(38);
   const [highScore, setHighScore] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   const { users, setUsers } = User();
 
   const startGame = () => {
+    setPaused(false);
     setScore(0);
     setSnake(SNAKE_START);
     setApple(APPLE_START);
@@ -53,6 +55,7 @@ export default () => {
   };
 
   const endGame = () => {
+    setPaused(false);
     setSpeed(null);
     setGameOver(true);
     updateScore();
@@ -70,21 +73,14 @@ export default () => {
   };
 
   const updateScore = async () => {
-    const { data } = await Axios.get(
-      `${url}/users/${_id}`
-      // `http://localhost:5000/users/${_id}`
-    );
+    const user = {
+      username,
+      userID: _id,
+      highScore: highScore
+    };
 
-    if (data.score < score || data.score === undefined) {
-      const user = {
-        username,
-        score,
-      };
-      Axios.post(
-        `${url}/users/update/${_id}`,
-        // `http://localhost:5000/users/update/${_id}`,
-        user
-      ).then((res) => {});
+    if (socket !== null) {
+      socket.emit("endGame", user);
     }
   };
 
@@ -111,7 +107,7 @@ export default () => {
   const spawnMines = (level) => {
     const mines = [];
     const f = [0, 1];
-    const cnt = level > 5 ? ~~(level / 10) + 1 : 1;
+    const cnt = level >= 5 ? Math.round(level / 5) + 1 : 1;
     for (let i = 0; i < cnt; i++) {
       const rndCords = f.map((_a, i) =>
         Math.floor(Math.random() * (CANVAS_SIZE[i] / SCALE))
@@ -149,6 +145,8 @@ export default () => {
       setApple(newApple);
       newScore += 1;
       setScore(newScore);
+
+      socket.emit("eatApple", _id);
       return true;
     }
     return false;
@@ -196,6 +194,9 @@ export default () => {
       snakeCopy[0][1] + direction[1],
     ];
     snakeCopy.unshift(newSnakeHead);
+
+    setSnake(translateSegments(snakeCopy));
+
     if (checkCollision(newSnakeHead)) {
       endGame();
     }
@@ -205,7 +206,6 @@ export default () => {
     if (checkMineCollision(glMines, snakeCopy)) {
       setMineHit(true);
     }
-    setSnake(translateSegments(snakeCopy));
   };
 
   useEffect(() => {
@@ -225,7 +225,15 @@ export default () => {
     checkScore();
   }, [gameOver]);
 
-  useInterval(() => gameLoop(), speed);
+  // useEffect(() => {
+  //   socket.on("FromAPI", (data) => {
+  //     setResponse(data);
+  //   });
+  // }, []);
+
+  response && console.log(response, "SOCKET IO");
+
+  useInterval(() => gameLoop(), speed, paused);
 
   return {
     startGame,
@@ -251,5 +259,7 @@ export default () => {
     checkScore,
     gameLoop,
     highScore,
+    setPaused,
+    paused,
   };
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, createContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import firebase from "firebase";
 import { CANVAS_SIZE } from "../constants";
 import Game from "./game-parts";
@@ -8,6 +8,7 @@ import styles from "./game-screen.module.css";
 const GameScreen = ({ username, logOut }) => {
   const { scaleSettings } = useContext(GameCtx);
   const [SCALE] = scaleSettings;
+  const divRef = useRef(null);
 
   const {
     canvasRef,
@@ -21,6 +22,8 @@ const GameScreen = ({ username, logOut }) => {
     score,
     highScore,
     endGame,
+    setPaused,
+    paused,
   } = Game();
 
   const signOut = () => {
@@ -38,13 +41,21 @@ const GameScreen = ({ username, logOut }) => {
       );
   };
 
-  const zoom = () => {
-    document.body.style.zoom = "100%";
+  const pausePanel = () => {
+    if (paused) {
+      return (
+        <div style={{ zIndex: 1 }}>
+          <p>Game Paused</p>
+          <button
+            className={styles.stopButton}
+            onClick={() => setPaused(!paused)}
+          >
+            {paused ? "Resume Game" : "Stop Game"}
+          </button>
+        </div>
+      );
+    }
   };
-
-  useEffect(() => {
-    zoom()
-  }, [])
 
   useEffect(() => {
     const context = canvasRef.current.getContext("2d");
@@ -64,11 +75,16 @@ const GameScreen = ({ username, logOut }) => {
     });
   }, [snake, apple, gameOver, glMines]);
 
+  useEffect(() => {
+    divRef.current.focus();
+  }, [paused]);
+
   return (
     <div
       className={styles.container}
       role="button"
       tabIndex="0"
+      ref={divRef}
       onKeyDown={(e) => moveSnake(e)}
     >
       <canvas
@@ -78,35 +94,42 @@ const GameScreen = ({ username, logOut }) => {
         width={`${CANVAS_SIZE[0]}px`}
         height={`${CANVAS_SIZE[1]}px`}
       />
-
-      <div>
-        [<span className={styles.keysText}>W,A,S,D</span> or{" "}
-        <span className={styles.keysText}>Arrow keys</span> to move snake]
-      </div>
-      <p>{message}</p>
-      <div className={styles.buttonContainer}>
-        <button className={styles.startButton} onClick={startGame}>
-          Start Game
-        </button>
-        <button className={styles.stopButton} onClick={endGame}>
-          Stop Game
-        </button>
-        <button className={styles.logoutButton} onClick={signOut}>
-          Logout
-        </button>
-      </div>
-
-      {username && (
-        <div>
-          <p className={styles.scoreText}>
-            {username} - Current Score:{" "}
-            <span className={styles.score}>{score}</span>
-          </p>
-          <p className={styles.scoreText}>
-            Your High Score:{" "}
-            <span className={styles.highScore}>{highScore}</span>
-          </p>
-        </div>
+      {paused ? (
+        pausePanel()
+      ) : (
+        <>
+          <div className={styles.keyContainer}>
+            [<span className={styles.keysText}>W,A,S,D</span> or{" "}
+            <span className={styles.keysText}>Arrow keys</span> to move snake]
+          </div>
+          <p>{message}</p>
+          <div className={styles.buttonContainer}>
+            <button className={styles.startButton} onClick={startGame}>
+              Start Game
+            </button>
+            <button
+              className={styles.stopButton}
+              onClick={() => setPaused(!paused)}
+            >
+              {paused ? "Resume Game" : "Stop Game"}
+            </button>
+            <button className={styles.logoutButton} onClick={signOut}>
+              Logout
+            </button>
+          </div>
+          {username && (
+            <div>
+              <p className={styles.scoreText}>
+                {username} - Current Score:{" "}
+                <span className={styles.score}>{score}</span>
+              </p>
+              <p className={styles.scoreText}>
+                Your High Score:{" "}
+                <span className={styles.highScore}>{highScore}</span>
+              </p>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
