@@ -1,5 +1,5 @@
-const CANVAS_SIZE = [800, 800];
-const SPEED = 125;
+const CANVAS_SIZE = [1920, 1080];
+const SPEED = 80;
 const SNAKE_START = [
   [8, 7],
   [8, 8],
@@ -11,9 +11,13 @@ const MINE_START = [
 ];
 const DIRECTIONS = {
   38: [0, -1], // up
+  87: [0, -1], // up
   40: [0, 1], // down
+  83: [0, 1], // down
   37: [-1, 0], // left
+  65: [-1, 0], // left
   39: [1, 0], // right
+  68: [1, 0], // right
 };
 
 const REVERSEDIRECTIONS = {
@@ -21,6 +25,10 @@ const REVERSEDIRECTIONS = {
   40: 38,
   37: 39,
   39: 37,
+  87: 83,
+  83: 87,
+  65: 68,
+  68: 65
 };
 
 export {

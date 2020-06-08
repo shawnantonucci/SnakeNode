@@ -1,0 +1,57 @@
+.container {
+  width: 65vw;
+  height: 65vh;
+  margin: 0 auto;
+  outline: none;
+}
+
+.canvasContainer {
+  border: 1px solid black;
+  background-color: whitesmoke;
+  width: 65vw;
+  height: 80vh;
+  margin: 0 auto;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.startButton {
+  background-color: green;
+  color: white;
+  border: 1px solid black;
+}
+
+.stopButton {
+  background-color: red;
+  color: white;
+  border: 1px solid black;
+  margin-left: 15px;
+}
+
+.logoutButton {
+    background-color: blue;
+    color: white;
+    border: 1px solid black;
+    margin-left: 15px;
+}
+
+.keysText {
+  color: blue;
+}
+
+.score {
+  color: green;
+  display: inline;
+}
+
+.scoreText {
+  font-weight: bold;
+}
+
+.highScore {
+  color: blue;
+  display: inline;
+}

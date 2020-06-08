@@ -8,7 +8,7 @@ import {
   DIRECTIONS,
   REVERSEDIRECTIONS,
 } from "../constants";
-import { url } from '../config'
+import { url } from "../config";
 import { useInterval } from "../useInterval";
 import { GameCtx } from "../App";
 import User from "./user";
@@ -49,7 +49,7 @@ export default () => {
     setMessage("");
     setSelf(false);
 
-    setMines(spawnMines(0))
+    setMines(spawnMines(0));
   };
 
   const endGame = () => {
@@ -84,12 +84,18 @@ export default () => {
         `${url}/users/update/${_id}`,
         // `http://localhost:5000/users/update/${_id}`,
         user
-      ).then((res) => { });
+      ).then((res) => {});
     }
   };
 
   const moveSnake = ({ keyCode }) => {
-    if (keyCode >= 37 && keyCode <= 40) {
+    if (
+      (keyCode >= 37 && keyCode <= 40) ||
+      keyCode === 87 ||
+      keyCode === 83 ||
+      keyCode === 65 ||
+      keyCode === 68
+    ) {
       if (keyCode !== REVERSEDIRECTIONS[prevKeyCode] && canMove) {
         setCanMove(false);
         setDirection(DIRECTIONS[keyCode]);
@@ -104,16 +110,18 @@ export default () => {
 
   const spawnMines = (level) => {
     const mines = [];
-    const f = [0, 1]
-    const cnt = (level > 10) ? ~~(level / 10) + 1 : 1;
+    const f = [0, 1];
+    const cnt = level > 5 ? ~~(level / 10) + 1 : 1;
     for (let i = 0; i < cnt; i++) {
-      const rndCords = f.map((_a, i) => Math.floor(Math.random() * (CANVAS_SIZE[i] / SCALE)))
-      mines.push(rndCords)
+      const rndCords = f.map((_a, i) =>
+        Math.floor(Math.random() * (CANVAS_SIZE[i] / SCALE))
+      );
+      mines.push(rndCords);
+      // setScale(SCALE - 5);
     }
 
-    return mines
-  }
-
+    return mines;
+  };
 
   const checkCollision = (head, snk = snake) => {
     for (const segment of snk) {
@@ -131,8 +139,8 @@ export default () => {
     if (newSnake[0][0] === apple[0] && newSnake[0][1] === apple[1]) {
       // this is where we are setting the scaling option! decrease to zoom out.
       // setScale(SCALE - 5)
-      const mines = spawnMines(score)
-      setMines(mines)
+      const mines = spawnMines(score);
+      setMines(mines);
 
       let newApple = spawnApple();
       while (checkCollision(newApple, newSnake)) {
@@ -151,9 +159,11 @@ export default () => {
       return false;
     }
 
-    const isCollision = mines.some(mine => snake[0][0] === mine[0] && snake[0][1] === mine[1])
+    const isCollision = mines.some(
+      (mine) => snake[0][0] === mine[0] && snake[0][1] === mine[1]
+    );
 
-    return isCollision
+    return isCollision;
   };
 
   const translateSegments = (sn) => {
@@ -177,7 +187,7 @@ export default () => {
 
   // GAME LOOP
   const gameLoop = () => {
-    console.log('game loop started!!!')
+    console.log("game loop started!!!");
     setCanMove(true);
 
     const snakeCopy = JSON.parse(JSON.stringify(snake));
@@ -199,14 +209,8 @@ export default () => {
   };
 
   useEffect(() => {
-    if (boundaryHit) {
-      setMessage("Hit the end of the world gameover");
-    }
-  }, [boundaryHit]);
-
-  useEffect(() => {
     if (self) {
-      setMessage("You ate yourself gameover");
+      setMessage("You ate yourself...");
     }
   }, [self]);
 
