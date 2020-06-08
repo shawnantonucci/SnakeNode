@@ -50,12 +50,13 @@ const GameScreen = ({ username, logOut }) => {
             className={styles.stopButton}
             onClick={() => setPaused(!paused)}
           >
-            {paused ? "Resume Game" : "Stop Game"}
+            {paused ? "Resume Game" : "Pause Game"}
           </button>
         </div>
       );
     }
   };
+
 
   useEffect(() => {
     const context = canvasRef.current.getContext("2d");
@@ -111,7 +112,7 @@ const GameScreen = ({ username, logOut }) => {
               className={styles.stopButton}
               onClick={() => setPaused(!paused)}
             >
-              {paused ? "Resume Game" : "Stop Game"}
+              {paused ? "Resume Game" : "Pause Game"}
             </button>
             <button className={styles.logoutButton} onClick={signOut}>
               Logout

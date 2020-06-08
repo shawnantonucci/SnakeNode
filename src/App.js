@@ -23,8 +23,8 @@ const App = () => {
   const [_id, set_ID] = useState("");
   const [username, setUserName] = useState("");
 
-  // const socket = useMemo(() => socketIOClient("localhost:5000/tick"));
-  const socket = useMemo(() => socketIOClient("mern-snake.herokuapp.com/tick"));
+  const socket = useMemo(() => socketIOClient("localhost:5000/tick"));
+  // const socket = useMemo(() => socketIOClient("mern-snake.herokuapp.com/tick"));
 
   useEffect(() => {
     socket.on("connect", () => {});
@@ -54,7 +54,7 @@ const App = () => {
     }
   });
 
-  const scaleSettings = useState(30);
+  const scaleSettings = useState(40);
 
   return (
     <GameCtx.Provider value={{ scaleSettings, _id, username, socket }}>
