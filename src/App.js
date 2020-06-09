@@ -23,18 +23,19 @@ const App = () => {
   const [_id, set_ID] = useState("");
   const [username, setUserName] = useState("");
 
-  const socket = useMemo(() => socketIOClient("localhost:5000/tick"));
-  // const socket = useMemo(() => socketIOClient("mern-snake.herokuapp.com/tick"));
+  // const socket = useMemo(() => socketIOClient("localhost:5000/tick"));
+  const socket = useMemo(() => socketIOClient("mern-snake.herokuapp.com/tick"));
 
-  useEffect(() => {
-    socket.on("connect", () => {});
-    // console.log("App -> socket", socket);
-  }, [socket]);
+  // useEffect(() => {
+  //   socket.on("connect", () => {});
+  //   // console.log("App -> socket", socket);
+  // }, [socket]);
 
   const logOut = () => {
     set_ID("");
     setUserName("");
     setUser("");
+    setAuthenticated(false)
   };
 
   firebase.auth().onAuthStateChanged(async (user) => {
@@ -42,15 +43,21 @@ const App = () => {
       setUser(user.email);
       const { data } = await Axios.get(`${url}/users`);
       // const { data } = await Axios.get("http://localhost:5000/users");
-      const currentUser = data.find(
+      const currentUser = await data.find(
         (dataUser) => dataUser.email === user.email
       );
-      set_ID(currentUser._id);
-      setUserName(currentUser.username);
+      console.log("App -> currentUser", currentUser);
+      if (currentUser) {
+        set_ID(currentUser._id);
+        setUserName(currentUser.username);
 
-      setAuthenticated(true);
-    } else {
-      setAuthenticated(false);
+        setAuthenticated(true);
+      } else {
+        setAuthenticated(false);
+      }
+    //   const currentUser = await data.find(
+    //     (dataUser) => dataUser.email === user.email
+    //   );
     }
   });
 

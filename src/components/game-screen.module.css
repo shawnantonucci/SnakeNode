@@ -68,3 +68,10 @@ body {
   color: blue;
   display: inline;
 }
+
+.leaderboardContainer {
+  position: absolute;
+  right: 11%;
+  top: 8%;
+}
+

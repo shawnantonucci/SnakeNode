@@ -57,6 +57,14 @@ const GameScreen = ({ username, logOut }) => {
     }
   };
 
+  const leaderBoard = () => {
+    return (
+      <div className={styles.leaderboardContainer}>
+        <h3>Leaderboards</h3>
+        <p>Shawn Antonucci - 1337</p>
+      </div>
+    );
+  };
 
   useEffect(() => {
     const context = canvasRef.current.getContext("2d");
@@ -100,8 +108,12 @@ const GameScreen = ({ username, logOut }) => {
       ) : (
         <>
           <div className={styles.keyContainer}>
-            [<span className={styles.keysText}>W,A,S,D</span> or{" "}
-            <span className={styles.keysText}>Arrow keys</span> to move snake]
+            <span className={styles.keysText}>[W,A,S,D]</span> or{" "}
+            <span className={styles.keysText}>[Arrow keys]</span> to move snake
+          </div>
+          <div className={styles.keyContainer}>
+            For Vim users <span className={styles.keysText}>[H,J,K,L]</span> to
+            move snake
           </div>
           <p>{message}</p>
           <div className={styles.buttonContainer}>
@@ -132,6 +144,7 @@ const GameScreen = ({ username, logOut }) => {
           )}
         </>
       )}
+      {leaderBoard()}
     </div>
   );
 };

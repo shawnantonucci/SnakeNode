@@ -90,7 +90,12 @@ export default () => {
       keyCode === 87 ||
       keyCode === 83 ||
       keyCode === 65 ||
-      keyCode === 68
+      keyCode === 68 ||
+      keyCode === 72 ||
+      keyCode === 74 ||
+      keyCode === 75 ||
+      keyCode === 76 
+
     ) {
       if (keyCode !== REVERSEDIRECTIONS[prevKeyCode] && canMove) {
         setCanMove(false);
